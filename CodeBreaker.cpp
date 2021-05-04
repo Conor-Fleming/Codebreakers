@@ -22,14 +22,12 @@
 
 using namespace std;
 vector<int> createCode();
+int vecToInt(vector<int>);
 
 int main() {
     vector<int> code = createCode();
-    
-    for (int i =0; i < code.size(); i++){
-        cout << code[i];
-    }
-    cout << endl;
+    int codeInt = vecToInt(code);
+    cout << codeInt << endl;
     return 0;
 } 
 
@@ -44,4 +42,13 @@ vector<int> createCode() {
         }
     }
     return code;
+}
+
+int vecToInt(vector<int> code) {
+    int codeInt = code.begin();
+    for (int i =1; i < code.size(); i++){
+        codeInt *= 10;
+        codeInt += code[i];
+    }
+    return codeInt;
 }
