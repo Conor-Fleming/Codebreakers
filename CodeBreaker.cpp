@@ -25,30 +25,66 @@ using namespace std;
 
 vector<int> createCode();
 bool inputCheck(string input);
+void codeCompare(vector<int> code, vector<int> validCode, int &guess);
 
 int main() {
-    vector<int> code = createCode();
-    cout << "Welcome to CodeBreaker." << endl;
-    cout << '\n';
-    cout << "<---------------------------------------->" << endl;
-    cout << '\n';
-    cout << "You have 8 chances to guess the 4 digit code. All digits will be unique." << endl; 
-    cout << "A valid guess is a 4 digit number with no repeating digits. All invalid guesses will be ignored." << endl;
-    
-    string userGuess;
-    while(cin >> userGuess){
-    //checking for valid input
-        if (inputCheck(userGuess)){
-            cout << "thats a proper code ****" << endl;
-            /*
-                enter code checking part of program
-
-
-            */
+    char replay = 'y';
+    while(replay == 'y'){
+        vector<int> code = createCode();
+        cout << "Welcome to CodeBreaker." <<  code[0] << code[1] << code[2] << code[3] <<endl;
+        cout << '\n';
+        cout << "<---------------------------------------->" << endl;
+        cout << '\n';
+        cout << "You have 8 chances to guess the 4 digit code. All digits will be unique." << endl; 
+        cout << "A valid guess is a 4 digit number with no repeating digits. All invalid guesses will be ignored." << endl;
+        
+        string input;
+        int guessCount = 0;
+        while(cin >> input && guessCount < 8){
+            //checking for valid input
+            if (inputCheck(input)){
+                //read valid code and enter individual digits into vector for checking
+                vector<int> validCode;
+                for(char const c: input){
+                    validCode.push_back(c - '0');
+                }
+                codeCompare(code, validCode, guessCount);5678
+            }
         }
-    }
+
+        //handling reruning or not
+        cout << "Do you want to play again? (y/n):" << endl;
+        cin >> replay;
+    } 
+
     return 0;
 } 
+
+void codeCompare(vector<int> code, vector<int> validCode, int &guessCount){
+    int digitCorrect = 0;
+    int digitWrongPos = 0;
+    if(validCode == code){
+        cout << "Congrats! You have guessed the code!" << endl;
+        return;
+    }else{
+        for(int i = 0; i < code.size(); i++){
+            vector<int>::iterator iter = find(code.begin(), code.end(), validCode[i]);
+            if(iter != code.end()){
+                int position = distance(code.begin(), iter);
+                if(position == i)
+                    digitCorrect++;
+                else
+                    digitWrongPos++;
+            }
+        }
+        cout << "You guessed " << digitCorrect + digitWrongPos << " correct numbers. But " << digitWrongPos << " were in the wrong position." << endl;
+        guessCount++;
+        cout << 8 - guessCount << " guesses left." << endl;
+    }
+}
+
+
+
 
 vector<int> createCode() {
     vector<int> code;
