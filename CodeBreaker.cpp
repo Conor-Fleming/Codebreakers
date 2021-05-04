@@ -22,12 +22,15 @@
 
 using namespace std;
 vector<int> createCode();
-int vecToInt(vector<int>);
 
 int main() {
     vector<int> code = createCode();
-    int codeInt = vecToInt(code);
-    cout << codeInt << endl;
+    cout << "Welcome to CodeBreaker." << endl;
+    cout << '\n';
+    cout << "<---------------------------------------->" << endl;
+    cout << '\n';
+    cout << "You have 8 chances to guess the 4 digit code. All digits will be unique." << endl;
+
     return 0;
 } 
 
@@ -42,13 +45,4 @@ vector<int> createCode() {
         }
     }
     return code;
-}
-
-int vecToInt(vector<int> code) {
-    int codeInt = code.begin();
-    for (int i =1; i < code.size(); i++){
-        codeInt *= 10;
-        codeInt += code[i];
-    }
-    return codeInt;
 }
