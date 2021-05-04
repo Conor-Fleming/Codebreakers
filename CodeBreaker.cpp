@@ -19,9 +19,12 @@
 #include<iostream>
 #include<algorithm>
 #include<vector>
+#include<ctype.h>
 
 using namespace std;
+
 vector<int> createCode();
+bool inputCheck(string input);
 
 int main() {
     vector<int> code = createCode();
@@ -29,8 +32,21 @@ int main() {
     cout << '\n';
     cout << "<---------------------------------------->" << endl;
     cout << '\n';
-    cout << "You have 8 chances to guess the 4 digit code. All digits will be unique." << endl;
+    cout << "You have 8 chances to guess the 4 digit code. All digits will be unique." << endl; 
+    cout << "A valid guess is a 4 digit number with no repeating digits. All invalid guesses will be ignored." << endl;
+    
+    string userGuess;
+    while(cin >> userGuess){
+    //checking for valid input
+        if (inputCheck(userGuess)){
+            cout << "thats a proper code ****" << endl;
+            /*
+                enter code checking part of program
 
+
+            */
+        }
+    }
     return 0;
 } 
 
@@ -45,4 +61,24 @@ vector<int> createCode() {
         }
     }
     return code;
+}
+
+bool inputCheck(string userGuess) {
+    if (userGuess.length() != 4 || !isdigit(userGuess[0]) || !isdigit(userGuess[1]) || !isdigit(userGuess[2]) || !isdigit(userGuess[3])) {
+        cout << "Please enter a valid code" << endl;
+        return false;
+    }
+    for(int i = 0; i < 4; i++) {
+        int matchCount = 0;
+        for(int y = 0; y < 4; y++){
+            if (userGuess[i] == userGuess[y]){
+                matchCount += 1;
+            }
+        }
+        if (matchCount > 1){
+            cout << "Please enter a valid code" << endl;
+            return false;
+        }
+    }
+    return true;
 }
