@@ -23,15 +23,18 @@
 
 using namespace std;
 
+//function declarations
 vector<int> createCode();
 bool inputCheck(string input);
 bool codeCompare(vector<int> code, vector<int> validCode, int &guess);
 
 int main() {
+    //big while loop to help with easy re-running of program based on user input
     char replay = 'y';
     while(replay == 'y'){
+        //creating code and beginning game, createCode() handles the creating of the random code 
         vector<int> code = createCode();
-        cout << "\t\t\tWelcome to CodeBreaker." <<  code[0] << code[1] << code[2] << code[3] <<endl;
+        cout << "\t\t\tWelcome to CodeBreaker." << endl;
         cout << '\n';
         cout << "\t\t<---------------------------------------->" << endl;
         cout << '\n';
@@ -43,17 +46,25 @@ int main() {
         while(cin >> input){
             //checking for valid input
             if (inputCheck(input)){
-                //read valid code and enter individual digits into vector for checking
+                //code will be valid so decalring vector and pushing individual digits into vector for easier comparison.
                 vector<int> validCode;
                 for(char const c: input){
                     validCode.push_back(c - '0');
                 }
+                //if code is guess codeCompare will return true
                 correctGuess = codeCompare(code, validCode, guessCount);
             }
-            if(guessCount == 8 || correctGuess)
+            //adding conditionals, if user guesses code they dont need to know it again.
+            if(correctGuess)
                 break;
+            //unsuccessful guess displays the code to user then breaks out of while loop
+            if(guessCount == 8){
+                cout << "The code was " << code[0] << code[1] << code[2] << code[3];
+                cout << ".\n";
+                break;
+            }
         }
-        //handling reruning or not
+        //asking user if they want to re-play, a 'y' response will re-trigger outer while loop
         cout << "Do you want to play again? (y/n):" << endl;
         cin >> replay;
     } 
@@ -63,31 +74,37 @@ int main() {
 bool codeCompare(vector<int> code, vector<int> validCode, int &guessCount){
     int digitCorrect = 0;
     int digitWrongPos = 0;
+    //if user guesses correctly display message and return with true flag.
     if(validCode == code){
         cout << "Congrats! You have guessed the code!" << endl;
         return true;
+    //else for each digit of the user guess see if that digit exists in the code
     }else{
         for(int i = 0; i < code.size(); i++){
             vector<int>::iterator iter = find(code.begin(), code.end(), validCode[i]);
+
+            //if the guessed digit exists in the code add 1 to correct guesses count and record index position
             if(iter != code.end()){
+                digitCorrect++;
                 int position = distance(code.begin(), iter);
-                if(position == i)
-                    digitCorrect++;
-                else
-                    digitWrongPos++;
+                //checking if position of digit is correct
+                if(position != i)
+                digitWrongPos++;
             }
         }
-        cout << "You guessed " << digitCorrect + digitWrongPos << " correct numbers. " << digitWrongPos << " of those correct guesses were in the wrong position" endl;
+        //incrementing guesses and display stats to user.
+        cout << "You guessed " << digitCorrect << " correct number(s). " << digitWrongPos << " of which, in the wrong position" << endl;
         guessCount++;
         cout << 8 - guessCount << " guesses left." << endl;
-        cout << "\r";
     }
     return false;
 }
 
 vector<int> createCode() {
     vector<int> code;
+    //seeding random number generator so it is different each iteration of game
     srand(time(0));
+    //keeping code to 4 digits
     while (code.size() < 4)
     {
         int digit = rand() % 10;
@@ -99,10 +116,13 @@ vector<int> createCode() {
 }
 
 bool inputCheck(string userGuess) {
+    //making sure user doesnt enter a number longer than 4 digits or any non digit characters
     if (userGuess.length() != 4 || !isdigit(userGuess[0]) || !isdigit(userGuess[1]) || !isdigit(userGuess[2]) || !isdigit(userGuess[3])) {
         cout << "Please enter a valid code" << endl;
         return false;
     }
+    //checking for repeat digits in user input
+    //comparing each digit with the rest of the digits in string and incrementing counter when they are equivalent
     for(int i = 0; i < 4; i++) {
         int matchCount = 0;
         for(int y = 0; y < 4; y++){
@@ -110,6 +130,8 @@ bool inputCheck(string userGuess) {
                 matchCount += 1;
             }
         }
+        
+        //if match count is greater than 1 (each digit will always be equal to itself) reject entered code
         if (matchCount > 1){
             cout << "Please enter a valid code" << endl;
             return false;
