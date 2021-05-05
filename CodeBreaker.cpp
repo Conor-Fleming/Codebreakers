@@ -16,6 +16,9 @@
 // All your code should go in this file. Please do NOT include your name, as we anonymize tests during evaluation to reduce bias.
 //
 // Good luck!
+
+//compiled with "g++ ../CodeBreaker.cpp -std=c++11 -o output" on iOS
+
 #include<iostream>
 #include<algorithm>
 #include<vector>
@@ -130,7 +133,6 @@ bool inputCheck(string userGuess) {
                 matchCount += 1;
             }
         }
-        
         //if match count is greater than 1 (each digit will always be equal to itself) reject entered code
         if (matchCount > 1){
             cout << "Please enter a valid code" << endl;
